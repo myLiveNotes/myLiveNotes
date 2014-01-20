@@ -47,7 +47,7 @@ UBWebPublisher::~UBWebPublisher()
 
 QString UBWebPublisher::exportName()
 {
-    return tr("Publish Document on Sankore Web");
+    return tr("Publish Document on myLiveNotes Web");
 }
 
 

@@ -560,7 +560,7 @@ void UBApplicationController::checkUpdate()
 {
     if(mHttp)
         delete mHttp;
-    QUrl url("http://ftp.open-sankore.org/update.json");
+    QUrl url("http://ftp.myLiveNotes.com/update.json");
     mHttp = new QHttp(url.host());
     connect(mHttp, SIGNAL(requestFinished(int,bool)), this, SLOT(updateRequestFinished(int,bool)));
     mHttp->get(url.path());

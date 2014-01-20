@@ -26,9 +26,9 @@ initializeVariables()
   STANDARD_QT_USED=false
 
   PRODUCT_PATH="build/linux/release/product"
-  QT_PATH="/usr/local/Trolltech/Qt-4.8.0"
+  QT_PATH="/usr/local/Trolltech/Qt-4.7.0"
   PLUGINS_PATH="$QT_PATH/plugins"
-  GUI_TRANSLATIONS_DIRECTORY_PATH="../Qt-4.8/translations"
+  GUI_TRANSLATIONS_DIRECTORY_PATH="../Qt-sankore3.1/translations"
   QT_LIBRARY_DEST_PATH="$PRODUCT_PATH/qtlib"
   QT_LIBRARY_SOURCE_PATH="$QT_PATH/lib"
   ARCHITECTURE=`uname -m`
@@ -69,9 +69,9 @@ alertIfPreviousVersionInstalled(){
     if [ ! -e "$APT_CACHE" ]; then
         notifyError "apt-cache command not found"
     else
-        SEARCH_RESULT=`$APT_CACHE search open-sankore`
-        if [ `echo $SEARCH_RESULT | grep -c open-sankore` -ge 1 ]; then
-            notifyError "Found a previous version of Open-Sankore. Remove it to avoid to put it as dependency"
+        SEARCH_RESULT=`$APT_CACHE search myLiveNotes`
+        if [ `echo $SEARCH_RESULT | grep -c myLiveNotes` -ge 1 ]; then
+            notifyError "Found a previous version of myLiveNotes. Remove it to avoid to put it as dependency"
         fi
     fi
 }
@@ -155,7 +155,7 @@ cd $GUI_TRANSLATIONS_DIRECTORY_PATH
 $LRELEASES translations.pro
 cd -
 
-notifyProgress "Open-Sankore" "Building Open-Sankore"
+notifyProgress "myLiveNotes" "Building myLiveNotes"
 
 if [ "$ARCHITECTURE" == "amd64" ]; then
     $QMAKE_PATH Sankore_3.1.pro -spec linux-g++-64
@@ -165,8 +165,8 @@ fi
 
 make -j 4 release-install
 
-if [ ! -e "$PRODUCT_PATH/Open-Sankore" ]; then
-    notifyError "Open-Sankore build failed"
+if [ ! -e "$PRODUCT_PATH/myLiveNotes" ]; then
+    notifyError "myLiveNotes build failed"
 fi
 
 notifyProgress "Git Hub" "Make a tag of the delivered version"
@@ -229,7 +229,7 @@ cd $PRODUCT_PATH
 find . -name .svn -exec rm -rf {} \; 2> /dev/null
 cd -
 
-notifyProgress "Building Sankore" "Finished to build Sankore building the package"
+notifyProgress "Building myLiveNotes" "Finished to build Sankore building the package"
 
 BASE_WORKING_DIR="packageBuildDir"
 
@@ -257,7 +257,7 @@ cat > "$BASE_WORKING_DIR/DEBIAN/prerm" << EOF
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # ---------------------------------------------------------------------
 
-xdg-desktop-menu uninstall /usr/share/applications/Open-Sankore.desktop
+xdg-desktop-menu uninstall /usr/share/applications/myLiveNotes.desktop
 exit 0
 #DEBHELPER#
 EOF
@@ -279,13 +279,13 @@ cat > "$BASE_WORKING_DIR/DEBIAN/postint" << EOF
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # ---------------------------------------------------------------------
 
-xdg-desktop-menu install --novendor /usr/share/applications/Open-Sankore.desktop
+xdg-desktop-menu install --novendor /usr/share/applications/myLiveNotes.desktop
 exit 0
 #DEBHELPER#
 EOF
 
 
-SANKORE_DIRECTORY_NAME="Open-Sankore-$VERSION"
+SANKORE_DIRECTORY_NAME="myLiveNotes-$VERSION"
 SANKORE_PACKAGE_DIRECTORY="$BASE_WORKING_DIR/usr/local/$SANKORE_DIRECTORY_NAME"
 #move sankore build directory to packages directory
 cp -R $PRODUCT_PATH $SANKORE_PACKAGE_DIRECTORY 
@@ -308,7 +308,7 @@ cat > $BASE_WORKING_DIR/usr/local/$SANKORE_DIRECTORY_NAME/run.sh << EOF
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # ---------------------------------------------------------------------
 
-env LD_LIBRARY_PATH=/usr/local/$SANKORE_DIRECTORY_NAME/qtlib:$LD_LIBRARY_PATH /usr/local/$SANKORE_DIRECTORY_NAME/Open-Sankore
+env LD_LIBRARY_PATH=/usr/local/$SANKORE_DIRECTORY_NAME/qtlib:$LD_LIBRARY_PATH /usr/local/$SANKORE_DIRECTORY_NAME/myLiveNotes
 EOF
 
 
@@ -316,26 +316,26 @@ CHANGE_LOG_FILE="$BASE_WORKING_DIR/DEBIAN/changelog-sankore-$VERSION.txt"
 CONTROL_FILE="$BASE_WORKING_DIR/DEBIAN/control"
 CHANGE_LOG_TEXT="changelog.txt"
 
-echo "Open-Sankore ($VERSION) $ARCHITECTURE; urgency=low" > "$CHANGE_LOG_FILE"
+echo "myLiveNotes ($VERSION) $ARCHITECTURE; urgency=low" > "$CHANGE_LOG_FILE"
 echo >> "$CHANGE_LOG_FILE"
 cat $CHANGE_LOG_TEXT >> "$CHANGE_LOG_FILE"
 echo >> "$CHANGE_LOG_FILE"
-echo "-- Claudio Valerio <claudio@open-sankore.org>  `date`" >> "$CHANGE_LOG_FILE"
+echo "-- Claudio Valerio <claudio@myLiveNotes.org>  `date`" >> "$CHANGE_LOG_FILE"
 
-echo "Package: open-sankore" > "$CONTROL_FILE"
+echo "Package: myLiveNotes" > "$CONTROL_FILE"
 echo "Version: $VERSION" >> "$CONTROL_FILE"
 echo "Section: education" >> "$CONTROL_FILE"
 echo "Priority: optional" >> "$CONTROL_FILE"
 echo "Architecture: $ARCHITECTURE" >> "$CONTROL_FILE"
 echo "Essential: no" >> "$CONTROL_FILE"
 echo "Installed-Size: `du -s $SANKORE_PACKAGE_DIRECTORY | awk '{ print $1 }'`" >> "$CONTROL_FILE"
-echo "Maintainer: Open-Sankoré Developers team <dev@open-sankore.org>" >> "$CONTROL_FILE"
-echo "Homepage: http://dev.open-sankore.org" >> "$CONTROL_FILE"
+echo "Maintainer: myLiveNotes Developers team <dev@myLiveNotes.com>" >> "$CONTROL_FILE"
+echo "Homepage: http://dev.myLiveNotes.org" >> "$CONTROL_FILE"
 echo -n "Depends: " >> "$CONTROL_FILE"
 unset tab
 declare -a tab
 let count=0
-for l in `objdump -p $SANKORE_PACKAGE_DIRECTORY/Open-Sankore | grep NEEDED | awk '{ print $2 }'`; do 
+for l in `objdump -p $SANKORE_PACKAGE_DIRECTORY/myLiveNotes | grep NEEDED | awk '{ print $2 }'`; do 
     for lib in `dpkg -S  $l | awk -F":" '{ print $1 }'`; do
         #echo $lib
         presence=`echo ${tab[*]} | grep -c "$lib"`; 
@@ -356,12 +356,12 @@ echo "" >> "$CONTROL_FILE"
 echo "Description: This a interactive white board that uses a free standard format." >> "$CONTROL_FILE"
 
 find $BASE_WORKING_DIR/usr/ -exec md5sum {} > $BASE_WORKING_DIR/DEBIAN/md5sums 2>/dev/null \; 
-SANKORE_SHORTCUT="$BASE_WORKING_DIR/usr/share/applications/Open-Sankore.desktop"
+SANKORE_SHORTCUT="$BASE_WORKING_DIR/usr/share/applications/myLiveNotes.desktop"
 echo "[Desktop Entry]" > $SANKORE_SHORTCUT
 echo "Version=$VERSION" >> $SANKORE_SHORTCUT
 echo "Encoding=UTF-8" >> $SANKORE_SHORTCUT
-echo "Name=Open-Sankore ($VERSION)" >> $SANKORE_SHORTCUT
-echo "GenericName=Open-Sankore" >> $SANKORE_SHORTCUT
+echo "Name=myLiveNotes ($VERSION)" >> $SANKORE_SHORTCUT
+echo "GenericName=myLiveNotes" >> $SANKORE_SHORTCUT
 echo "Comment=Logiciel de création de présentations pour tableau numérique interactif (TNI)" >> $SANKORE_SHORTCUT 
 echo "Exec=/usr/local/$SANKORE_DIRECTORY_NAME/run.sh" >> $SANKORE_SHORTCUT
 echo "Icon=/usr/local/$SANKORE_DIRECTORY_NAME/sankore.png" >> $SANKORE_SHORTCUT
@@ -369,18 +369,18 @@ echo "StartupNotify=true" >> $SANKORE_SHORTCUT
 echo "Terminal=false" >> $SANKORE_SHORTCUT
 echo "Type=Application" >> $SANKORE_SHORTCUT
 echo "Categories=Education" >> $SANKORE_SHORTCUT
-echo "Name[fr_FR]=Open-Sankore ($VERSION)" >> $SANKORE_SHORTCUT
+echo "Name[fr_FR]=myLiveNotes ($VERSION)" >> $SANKORE_SHORTCUT
 cp "resources/images/uniboard.png" "$SANKORE_PACKAGE_DIRECTORY/sankore.png"
 chmod 755 "$BASE_WORKING_DIR/DEBIAN"
 chmod 755 "$BASE_WORKING_DIR/DEBIAN/prerm"
 chmod 755 "$BASE_WORKING_DIR/DEBIAN/postint"
 
 mkdir -p "install/linux"
-DEBIAN_PACKAGE_NAME="Open-Sankore_${VERSION}_$ARCHITECTURE.deb"
+DEBIAN_PACKAGE_NAME="myLiveNotes_${VERSION}_$ARCHITECTURE.deb"
 
 chown -R root:root $BASE_WORKING_DIR 
 dpkg -b "$BASE_WORKING_DIR" "install/linux/$DEBIAN_PACKAGE_NAME"
-notifyProgress "Open-Sankore" "Package built"
+notifyProgress "myLiveNotes" "Package built"
 
 #clean up mess
 rm -rf $BASE_WORKING_DIR
@@ -388,10 +388,10 @@ rm -rf $BASE_WORKING_DIR
 
 if [ $CREATE_DIENA_DISTRIBUTION_ZIP == true ]; then
 
-    ZIP_NAME="Open-Sankoré_`lsb_release -is`_`lsb_release -rs`_${VERSION}_${ARCHITECTURE}.zip"
+    ZIP_NAME="myLiveNotes_`lsb_release -is`_`lsb_release -rs`_${VERSION}_${ARCHITECTURE}.zip"
     cd install/linux
     $ZIP_PATH -1 --junk-paths ${ZIP_NAME} ${DEBIAN_PACKAGE_NAME} ../../ReleaseNotes.pdf ../../JournalDesModifications.pdf ../../LICENSE.txt
     cd -
-    notifyProgress "Open-Sankore" "Build Diena zip file for distribution"
+    notifyProgress "myLiveNotes" "Build Diena zip file for distribution"
 fi
 

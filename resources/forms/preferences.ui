@@ -161,7 +161,7 @@
                 <item>
                  <widget class="QPushButton" name="quitOpenSankorePushButton">
                   <property name="text">
-                   <string>Close Open-Sankoré</string>
+                   <string>Close myLiveNotes</string>
                   </property>
                  </widget>
                 </item>
@@ -1836,7 +1836,7 @@ See COPYING file for the full LGPL text.</string>
          </widget>
          <widget class="QWidget" name="sankoreTab">
           <attribute name="title">
-           <string>Open-Sankoré</string>
+           <string>myLiveNotes</string>
           </attribute>
           <layout class="QHBoxLayout" name="horizontalLayout_9">
            <item>

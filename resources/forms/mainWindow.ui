@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Open-Sankoré</string>
+   <string>myLiveNotes</string>
   </property>
   <property name="windowIcon">
    <iconset resource="../sankore.qrc">
@@ -389,7 +389,7 @@
     <string>Quit</string>
    </property>
    <property name="toolTip">
-    <string>Quit Open-Sankoré</string>
+    <string>Quit myLiveNotes</string>
    </property>
    <property name="shortcutContext">
     <enum>Qt::WindowShortcut</enum>
@@ -629,10 +629,10 @@
      <normaloff>:/images/toolbar/menu.png</normaloff>:/images/toolbar/menu.png</iconset>
    </property>
    <property name="text">
-    <string>Open-Sankoré</string>
+    <string>myLiveNotes</string>
    </property>
    <property name="toolTip">
-    <string>Open-Sankoré</string>
+    <string>myLiveNotes</string>
    </property>
   </action>
   <action name="actionDesktop">
@@ -1576,10 +1576,10 @@
      <normaloff>:/images/toolbar/paraschool.png</normaloff>:/images/toolbar/paraschool.png</iconset>
    </property>
    <property name="text">
-    <string>Open-Sankoré Editor</string>
+    <string>myLiveNotes Editor</string>
    </property>
    <property name="toolTip">
-    <string>Show Open-Sankoré Widgets Editor</string>
+    <string>Show myLiveNotes Widgets Editor</string>
    </property>
   </action>
   <action name="actionHideApplication">
@@ -1588,10 +1588,10 @@
      <normaloff>:/images/toolbar/hide.png</normaloff>:/images/toolbar/hide.png</iconset>
    </property>
    <property name="text">
-    <string>Hide Open-Sankoré</string>
+    <string>Hide myLiveNotes</string>
    </property>
    <property name="toolTip">
-    <string>Hide Open-Sankoré Application</string>
+    <string>Hide myLiveNotes Application</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+H</string>

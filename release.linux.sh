@@ -38,18 +38,20 @@ checkDirectory(){
 #######################################################################
 #                     path definition                                 #
 #######################################################################
-QT_PATH="/usr/local/Trolltech/Qt-4.7.3"
+#QT_PATH="/usr/local/Trolltech/Qt-4.7.0"
+QT_PATH="/home/apark/QT-4.7.0"
 QT_PLUGINS_PATH="$QT_PATH/plugins"
 RELEASE_DIR=build/linux/release
 BUILD_DIR=$RELEASE_DIR/product
 GUI_TRANSLATIONS_DIRECTORY_PATH="../Qt-sankore3.1/translations"
 QT_LIBRARY_SOURCE_PATH="$QT_PATH/lib"
-SANKORE_SRC_PLUGINS_PATH="plugins"
-SANKORE_DST_PLUGINS_PATH=build/linux/release/product/plugins
-CFF_ADAPTOR_SRC_PLUGIN_PATH=$SANKORE_SRC_PLUGINS_PATH/cffadaptor/build/linux/release/lib
+LIVENOTES_SRC_PLUGINS_PATH="plugins"
+LIVENOTES_DST_PLUGINS_PATH=build/linux/release/product/plugins
+CFF_ADAPTOR_SRC_PLUGIN_PATH=$LIVENOTES_SRC_PLUGINS_PATH/cffadaptor/build/linux/release/lib
 
 QMAKE_PATH="$QT_PATH/bin/qmake"
-LRELEASE="../Qt-sankore3.1/bin/lrelease"
+LRELEASE="/home/apark/QT-4.7.0/bin/lrelease"
+#LRELEASE="../Qt-sankore3.1/bin/lrelease"
 #LRELEASE="/usr/local/Trolltech/Qt-4.7.3/bin/lrelease"
 
 ARCHITECTURE=`uname -m`
@@ -87,18 +89,20 @@ fi
 cp $GUI_TRANSLATIONS_DIRECTORY_PATH/qt_??.qm $BUILD_DIR/i18n/
 
 
-$LRELEASE Sankore_3.1.pro
+$LRELEASE myLiveNotes.pro
 
 
 #######################################################################
 #                            building                                 #
 #######################################################################
-notify-send "Open-Sankore" "Building Open-Sankore ..."
+notify-send "myLiveNotes" "Building myLiveNotes ..."
 
 if [ "$ARCHITECTURE" == "x86_64" ]; then
-    $QMAKE_PATH -spec linux-g++-64
+    #$QMAKE_PATH -spec linux-g++-64
+    $QMAKE_PATH myLiveNotes.pro -spec linux-g++-64
 else
-    $QMAKE_PATH -spec linux-g++
+    #$QMAKE_PATH -spec linux-g++
+    $QMAKE_PATH myLiveNotes.pro -spec linux-g++
 fi
 
 checkDirectory $BUILD_DIR
@@ -133,10 +137,10 @@ cp -R resources/linux/qtlinux/* $BUILD_DIR
 
 cp -R resources/customizations $BUILD_DIR
 
-notify-send "Sankore" "Copying plugins..."
-mkdir "$SANKORE_DST_PLUGINS_PATH"
-mkdir "$SANKORE_DST_PLUGINS_PATH/cffadaptor"
-cp -R $CFF_ADAPTOR_SRC_PLUGIN_PATH/*.so* "$SANKORE_DST_PLUGINS_PATH/cffadaptor"
+notify-send "myLiveNotes" "Copying plugins..."
+mkdir "$LIVENOTES_DST_PLUGINS_PATH"
+mkdir "$LIVENOTES_DST_PLUGINS_PATH/cffadaptor"
+cp -R $CFF_ADAPTOR_SRC_PLUGIN_PATH/*.so* "$LIVENOTES_DST_PLUGINS_PATH/cffadaptor"
 
 notify-send "QT" "Coping plugins and library ..."
 cp -R $QT_PLUGINS_PATH $BUILD_DIR
@@ -174,7 +178,7 @@ cd $BUILD_DIR
 find . -name .svn -exec rm -rf {} \; 2> /dev/null
 
 cd -
-notify-send "Building Sankore" "Finished to build Sankore building the package"
+notify-send "Building myLiveNotes" "Finished to build myLiveNotes building the package"
 
 #######################################################################
 #                          build debian                               #
@@ -205,7 +209,7 @@ cat > "$BASE_WORKING_DIR/DEBIAN/prerm" << EOF
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # ---------------------------------------------------------------------
 
-xdg-desktop-menu uninstall /usr/share/applications/Open-Sankore.desktop
+xdg-desktop-menu uninstall /usr/share/applications/myLiveNotes.desktop
 exit 0
 #DEBHELPER#
 EOF
@@ -227,19 +231,19 @@ cat > "$BASE_WORKING_DIR/DEBIAN/postint" << EOF
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # ---------------------------------------------------------------------
 
-xdg-desktop-menu install --novendor /usr/share/applications/Open-Sankore.desktop
+xdg-desktop-menu install --novendor /usr/share/applications/myLiveNotes.desktop
 exit 0
 #DEBHELPER#
 EOF
 
 
-SANKORE_DIRECTORY_NAME="Open-Sankore-$VERSION"
-SANKORE_PACKAGE_DIRECTORY="$BASE_WORKING_DIR/usr/local/$SANKORE_DIRECTORY_NAME"
+LIVENOTES_DIRECTORY_NAME="myLiveNotes-$VERSION"
+LIVENOTES_PACKAGE_DIRECTORY="$BASE_WORKING_DIR/usr/local/$LIVENOTES_DIRECTORY_NAME"
 #move sankore build directory to packages directory
-cp -R $BUILD_DIR $SANKORE_PACKAGE_DIRECTORY 
+cp -R $BUILD_DIR $LIVENOTES_PACKAGE_DIRECTORY 
 
 
-cat > $BASE_WORKING_DIR/usr/local/$SANKORE_DIRECTORY_NAME/run.sh << EOF
+cat > $BASE_WORKING_DIR/usr/local/$LIVENOTES_DIRECTORY_NAME/run.sh << EOF
 !/bin/bash
 # --------------------------------------------------------------------
 # This program is free software: you can redistribute it and/or modify
@@ -256,7 +260,7 @@ cat > $BASE_WORKING_DIR/usr/local/$SANKORE_DIRECTORY_NAME/run.sh << EOF
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # ---------------------------------------------------------------------
 
-env LD_LIBRARY_PATH=/usr/local/$SANKORE_DIRECTORY_NAME/qtlib:$LD_LIBRARY_PATH /usr/local/$SANKORE_DIRECTORY_NAME/Open-Sankore
+env LD_LIBRARY_PATH=/usr/local/$LIVENOTES_DIRECTORY_NAME/qtlib:$LD_LIBRARY_PATH /usr/local/$LIVENOTES_DIRECTORY_NAME/myLiveNotes
 EOF
 
 
@@ -272,26 +276,27 @@ if [ "$ARCHITECTURE" == "i686" ]; then
     ARCHITECTURE="i386"
 fi
 
-echo "Open-Sankore ($VERSION) $ARCHITECTURE; urgency=low" > "$CHANGE_LOG_FILE"
+echo "myLiveNotes ($VERSION) $ARCHITECTURE; urgency=low" > "$CHANGE_LOG_FILE"
 echo >> "$CHANGE_LOG_FILE"
 cat $CHANGE_LOG_TEXT >> "$CHANGE_LOG_FILE"
 echo >> "$CHANGE_LOG_FILE"
-echo "-- Claudio Valerio <claudio@open-sankore.org>  `date`" >> "$CHANGE_LOG_FILE"
+#echo "-- Claudio Valerio <claudio@open-sankore.org>  `date`" >> "$CHANGE_LOG_FILE"
+echo "-- Andrew Park <andrew@mylivenotes.com>  `date`" >> "$CHANGE_LOG_FILE"
 
-echo "Package: open-sankore" > "$CONTROL_FILE"
+echo "Package: myLiveNotes" > "$CONTROL_FILE"
 echo "Version: $VERSION" >> "$CONTROL_FILE"
 echo "Section: education" >> "$CONTROL_FILE"
 echo "Priority: optional" >> "$CONTROL_FILE"
 echo "Architecture: $ARCHITECTURE" >> "$CONTROL_FILE"
 echo "Essential: no" >> "$CONTROL_FILE"
-echo "Installed-Size: `du -s $SANKORE_PACKAGE_DIRECTORY | awk '{ print $1 }'`" >> "$CONTROL_FILE"
-echo "Maintainer: Open-Sankore Developers team <dev@open-sankore.org>" >> "$CONTROL_FILE"
+echo "Installed-Size: `du -s $LIVENOTES_PACKAGE_DIRECTORY | awk '{ print $1 }'`" >> "$CONTROL_FILE"
+echo "Maintainer: myLiveNotes Developers team <dev@open-sankore.org>" >> "$CONTROL_FILE"
 echo "Homepage: http://dev.open-sankore.org" >> "$CONTROL_FILE"
 echo -n "Depends: " >> "$CONTROL_FILE"
 unset tab
 declare -a tab
 let count=0
-for l in `objdump -p $SANKORE_PACKAGE_DIRECTORY/Open-Sankore | grep NEEDED | awk '{ print $2 }'`; do 
+for l in `objdump -p $LIVENOTES_PACKAGE_DIRECTORY/myLiveNotes | grep NEEDED | awk '{ print $2 }'`; do 
     for lib in `dpkg -S  $l | awk -F":" '{ print $1 }'`; do
         #echo $lib
         presence=`echo ${tab[*]} | grep -c "$lib"`; 
@@ -318,32 +323,32 @@ echo "" >> "$CONTROL_FILE"
 echo "Description: This a interactive white board that uses a free standard format." >> "$CONTROL_FILE"
 
 find $BASE_WORKING_DIR/usr/ -exec md5sum {} > $BASE_WORKING_DIR/DEBIAN/md5sums 2>/dev/null \; 
-SANKORE_SHORTCUT="$BASE_WORKING_DIR/usr/share/applications/Open-Sankore.desktop"
-echo "[Desktop Entry]" > $SANKORE_SHORTCUT
-echo "Version=$VERSION" >> $SANKORE_SHORTCUT
-echo "Encoding=UTF-8" >> $SANKORE_SHORTCUT
-echo "Name=Open-Sankore ($VERSION)" >> $SANKORE_SHORTCUT
-echo "GenericName=Open-Sankore" >> $SANKORE_SHORTCUT
-echo "Comment=Logiciel de creation de presentations pour tableau numerique interactif (TNI)" >> $SANKORE_SHORTCUT 
-echo "Exec=/usr/local/$SANKORE_DIRECTORY_NAME/run.sh" >> $SANKORE_SHORTCUT
-echo "Icon=/usr/local/$SANKORE_DIRECTORY_NAME/sankore.png" >> $SANKORE_SHORTCUT
-echo "StartupNotify=true" >> $SANKORE_SHORTCUT
-echo "Terminal=false" >> $SANKORE_SHORTCUT
-echo "Type=Application" >> $SANKORE_SHORTCUT
-echo "Categories=Education" >> $SANKORE_SHORTCUT
-echo "Name[fr_FR]=Open-Sankore ($VERSION)" >> $SANKORE_SHORTCUT
-cp "resources/images/uniboard.png" "$SANKORE_PACKAGE_DIRECTORY/sankore.png"
+LIVENOTES_SHORTCUT="$BASE_WORKING_DIR/usr/share/applications/myLiveNotes.desktop"
+echo "[Desktop Entry]" > $LIVENOTES_SHORTCUT
+echo "Version=$VERSION" >> $LIVENOTES_SHORTCUT
+echo "Encoding=UTF-8" >> $LIVENOTES_SHORTCUT
+echo "Name=myLiveNotes ($VERSION)" >> $LIVENOTES_SHORTCUT
+echo "GenericName=myLiveNotes" >> $LIVENOTES_SHORTCUT
+echo "Comment=Logiciel de creation de presentations pour tableau numerique interactif (TNI)" >> $LIVENOTES_SHORTCUT 
+echo "Exec=/usr/local/$LIVENOTES_DIRECTORY_NAME/run.sh" >> $LIVENOTES_SHORTCUT
+echo "Icon=/usr/local/$LIVENOTES_DIRECTORY_NAME/sankore.png" >> $LIVENOTES_SHORTCUT
+echo "StartupNotify=true" >> $LIVENOTES_SHORTCUT
+echo "Terminal=false" >> $LIVENOTES_SHORTCUT
+echo "Type=Application" >> $LIVENOTES_SHORTCUT
+echo "Categories=Education" >> $LIVENOTES_SHORTCUT
+echo "Name[fr_FR]=myLiveNotes ($VERSION)" >> $LIVENOTES_SHORTCUT
+cp "resources/images/uniboard.png" "$LIVENOTES_PACKAGE_DIRECTORY/sankore.png"
 chmod 755 "$BASE_WORKING_DIR/DEBIAN"
 chmod 755 "$BASE_WORKING_DIR/DEBIAN/prerm"
 chmod 755 "$BASE_WORKING_DIR/DEBIAN/postint"
 
 mkdir -p "install/linux"
 
-rm install/linux/Open-Sankore_*.deb
+rm install/linux/myLiveNotes_*.deb
 
 fakeroot  chown -R root:root $BASE_WORKING_DIR 
-dpkg -b "$BASE_WORKING_DIR" install/linux/Open-Sankore_${VERSION}_$ARCHITECTURE.deb
-notify-send "Open-Sankore" "Package built"
+dpkg -b "$BASE_WORKING_DIR" install/linux/myLiveNotes_${VERSION}_$ARCHITECTURE.deb
+notify-send "myLiveNotes" "Package built"
 
 #clean up mess
 fakeroot rm -rf $BASE_WORKING_DIR
@@ -353,10 +358,10 @@ fakeroot rm -rf $BASE_WORKING_DIR
 #                             tar.gz                                  #
 #######################################################################
 echo `pwd`
-cp -R $RELEASE_DIR/product $RELEASE_DIR/Open-Sankore.$VERSION
+cp -R $RELEASE_DIR/product $RELEASE_DIR/myLiveNotes.$VERSION
 cd $RELEASE_DIR
 
-rm ../../../install/linux/Open-Sankore.tar.gz
+rm ../../../install/linux/myLiveNotes.tar.gz
 
-tar cvzf ../../../install/linux/Open-Sankore.tar.gz Open-Sankore.$VERSION -C . 
-notify-send "Open-Sankore"  "tar.gz Build done"
+tar cvzf ../../../install/linux/myLiveNotes.tar.gz myLiveNotes.$VERSION -C . 
+notify-send "myLiveNotes"  "tar.gz Build done"
