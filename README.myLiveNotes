@@ -1,0 +1,53 @@
+BUILD Instruction:
+
+Re-Branding
+- copy Sankore 3.1.iss to myLiveNotes.iss
+- copy Sankore_3.1.pro to myLiveNotes.pro
+- open both myLiveNotes.iss and myLiveNotes.pro and do
+  - search for Open-Sankore and replace with myLiveNotes
+  - search for Open-Sankoré and replace with myLiveNotes
+- edit src/adaptors/publishing/UBDocumentPublisher.cpp and replace 
+            request.setRawHeader("Host", "planete.open-sankore.org");
+  with
+            request.setRawHeader("Host", "planete.mylivenotes.com");
+  on line 832
+- edit all .ui files in resources/forms and replace most of "Open-Sankoré" referrences with "mylivenotes"
+  For this version, I have replaced ONLY the following while not replacing other Open-Sankoré references
+		mainWindow.ui:   <string>Open-Sankoré</string>
+		mainWindow.ui:    <string>Quit Open-Sankoré</string>
+		mainWindow.ui:    <string>Open-Sankoré</string>
+		mainWindow.ui:    <string>Open-Sankoré</string>
+		mainWindow.ui:    <string>Open-Sankoré Editor</string>
+		mainWindow.ui:    <string>Show Open-Sankoré Widgets Editor</string>
+		mainWindow.ui:    <string>Hide Open-Sankoré</string>
+		mainWindow.ui:    <string>Hide Open-Sankoré Application</string>
+		preferences.ui:                   <string>Close Open-Sankoré</string>
+		preferences.ui:           <string>Open-Sankoré</string>
+
+- edit resources/forms/mainWindow.ui and replace
+	<action name="actionSankoreEditor">
+  with 
+	<action name="actionSankoreEditor">
+
+Compile Custom QT:
+  - Make sure to download Open Source version of QT
+
+Compile myLiveNotes:
+- edit src/core/UBForeignObjectsHandler.cpp
+  Make sure to add 
+	#include <algorithm>
+  on top of the line otherwise it will complain 
+	set_symmetric_difference’ is not a member of ‘std'
+- edit src/adaptors/UBExportDocument.cpp:132:    return tr("Export to Sankore Format");
+- edit src/adaptors/UBExportDocumentSetAdaptor.cpp:147:    return tr("Export to Sankore UBX Format");
+- edit src/adaptors/UBWebPublisher.cpp:50:    return tr("Publish Document on Sankore Web");
+- edit src/core/UBApplicationController.cpp:563:    QUrl url("http://ftp.open-sankore.org/update.json");
+- edit resources/linux/run.sh and replace
+	env LD_LIBRARY_PATH=$PWD/qtlib:$PWD/plugins/cffadaptor:$LD_LIBRARY_PATH ./Open-Sankore
+  with
+	env LD_LIBRARY_PATH=$PWD/qtlib:$PWD/plugins/cffadaptor:$LD_LIBRARY_PATH ./myLiveNotes
+
+- edit release.linux.sh
+
+qmake myLiveNotes.pro -spec linux-g++-32
+make
