@@ -14,10 +14,12 @@ REM You should have received a copy of the GNU General Public License
 REM along with this program.  If not, see <http://www.gnu.org/licenses/>.
 REM ---------------------------------------------------------------------
 
-set QT_DIR=..\Qt-4.8
+REM set QT_DIR=..\Qt-4.8
+set QT_DIR=C:\Qt\4.7.0
 set QT_BIN=%QT_DIR%\bin
 
-set PROGRAMS_FILE_PATH=C:\Program Files
+REM set PROGRAMS_FILE_PATH=C:\Program Files
+set PROGRAMS_FILE_PATH=C:\Program Files (x86)
 
 set SEVEN_ZIP_EXE="%PROGRAMS_FILE_PATH%\7-Zip\7z.exe"
 set GIT_BIN=%PROGRAMS_FILE_PATH%\Git\bin
@@ -42,9 +44,11 @@ IF NOT EXIST "%QT_DIR%\lib\QtCore4.dll" GOTO EXIT_WITH_ERROR
 rmdir /S /Q %BUILD_DIR%
 rmdir /S /Q install
 
-"%QT_BIN%\qmake.exe" Sankore_3.1.pro
+REM "%QT_BIN%\qmake.exe" Sankore_3.1.pro
+"%QT_BIN%\qmake.exe" myLiveNotes.pro
 
-%LRELEASE% Sankore_3.1.pro
+REM %LRELEASE% Sankore_3.1.pro
+%LRELEASE% myLiveNotes.pro
 %LRELEASE% %BASE_QT_TRANSLATIONS_DIRECTORY%\translations.pro
 
 set /p VERSION= < build\win32\release\version
@@ -61,9 +65,10 @@ REM echo %VERSION%
 REM echo %LAST_TAG_VERSION%
 
 nmake release-install
-IF NOT EXIST build\win32\release\product\Open-Sankore.exe GOTO EXIT_WITH_ERROR
+REM IF NOT EXIST build\win32\release\product\Open-Sankore.exe GOTO EXIT_WITH_ERROR
+IF NOT EXIST build\win32\release\product\myLiveNotes.exe GOTO EXIT_WITH_ERROR
 
-xcopy C:\OpenSankore\lib\*.dll build\win32\release\product\
+xcopy C:\myLiveNotes\lib\*.dll build\win32\release\product\
 xcopy %QT_DIR%\lib\QtOpenGL4.dll build\win32\release\product\
 
 set CUSTOMIZATIONS=build\win32\release\product\customizations
@@ -79,19 +84,22 @@ xcopy /s %BASE_QT_TRANSLATIONS_DIRECTORY%\qt_*.qm %I18n%\
 
 del build\win32\release\product\i18n\qt_help*
 
-del "build\win32\release\product\Sankore.pdb"
+REM del "build\win32\release\product\Sankore.pdb"
+del "build\win32\release\product\myLiveNotes.pdb"
 
-set INSTALLER_NAME=Open-Sankore
+set INSTALLER_NAME=myLiveNotes
 
 set INSTALLER_PATH=.\install\win32\%INSTALLER_NAME%.exe
 
-call "%INNO_EXE%" "Sankore 3.1.iss" /F"%INSTALLER_NAME%"
+REM call "%INNO_EXE%" "Sankore 3.1.iss" /F"%INSTALLER_NAME%"
+call "%INNO_EXE%" "myLiveNotes.iss" /F"%INSTALLER_NAME%"
 
 set INSTALL_DIRECTORY=install\win32\
 xcopy *.pdf %INSTALL_DIRECTORY%
 xcopy LICENSE.txt %INSTALL_DIRECTORY%
 cd %INSTALL_DIRECTORY%
-call %SEVEN_ZIP_EXE% a Open-Sankor‚_Windows_%VERSION%.zip *.exe *.pdf *.txt
+REM call %SEVEN_ZIP_EXE% a Open-Sankor‚_Windows_%VERSION%.zip *.exe *.pdf *.txt
+call %SEVEN_ZIP_EXE% a myLiveNotes‚_Windows_%VERSION%.zip *.exe *.pdf *.txt
 cd ..\..\
 GOTO END
 
@@ -100,6 +108,6 @@ echo "Error found"
 GOTO :EOF
 
 :END
-echo "Open-Sankore's build finished"
+echo "myLiveNotes build finished"
 
 :EOF

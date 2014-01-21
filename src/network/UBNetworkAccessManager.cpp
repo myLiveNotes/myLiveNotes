@@ -161,8 +161,8 @@ void UBNetworkAccessManager::sslErrors(QNetworkReply *reply, const QList<QSslErr
         QWidget *mainWindow = QApplication::activeWindow();
 
         QStringList errorStrings;
-        for (int i = 0; i < error.count(); ++i)
-            errorStrings += error.at(i).errorString();
+        //for (int i = 0; i < error.count(); ++i)
+        //    errorStrings += error.at(i).errorString();
 
         QString errors = errorStrings.join(QLatin1String("\n"));
 

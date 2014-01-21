@@ -47,7 +47,8 @@ UBRubberBand::UBRubberBand(Shape s, QWidget * p)
     customStyle = NULL;
 
 #ifdef Q_WS_WIN
-    customStyle = new QWindowsXPStyle();
+    //customStyle = new QWindowsXPStyle();
+    customStyle = new QWindowsStyle();
 #elif defined(Q_WS_MAC)
     customStyle = new QMacStyle();
 #elif defined(Q_WS_X11)
@@ -55,7 +56,7 @@ UBRubberBand::UBRubberBand(Shape s, QWidget * p)
 #endif
 
     if (customStyle)
-        QRubberBand::setStyle(customStyle);
+	 QRubberBand::setStyle(customStyle);
 
     setAttribute(Qt::WA_TransparentForMouseEvents, false);
     setMouseTracking(true);
